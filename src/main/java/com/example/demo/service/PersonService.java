@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.controller.dto.PersonDTO;
+import com.example.demo.repository.exceptions.UserNotFoundException;
 import com.example.demo.repository.model.Person;
 
 
@@ -15,12 +16,12 @@ public interface PersonService {
 
     Long save(PersonDTO personDTO);
 
-    void update(Long personID, String name, String email);
+    Person update(Long personID, String name, String surname, String email);
 
     boolean deleteAll();
     boolean deleteById(Long personId);
 
-    Optional<Person> getById(Long personId);
+    Person getById(Long personId) throws UserNotFoundException;
     List<PersonDTO> getAll();
 
 }

@@ -33,7 +33,7 @@ public class ItemController {
         return new ResponseEntity<>(itemList, HttpStatus.OK);
     }
 
-    @GetMapping("/{itemId}")
+    @GetMapping("/itemId/{itemId}")
     @ResponseBody
     public ResponseEntity<Item> getItemById(@PathVariable Long itemId) {
         Item item = itemService.getById(itemId);
@@ -45,9 +45,13 @@ public class ItemController {
         Optional<List<ItemDTO>> itemList = itemService.getItemsByAuthor(author);
     }
 
-    @GetMapping("/borrow/{bookId}/{personId}")
-    public void borrowBook(@PathVariable("bookId") Long bookId, @PathVariable("personId") Long personId) {
-        borrowItemImpl.borrowMethod(bookId, personId);
+    @GetMapping("/borrow/{itemId}/{personId}")
+    public void borrowItem(@PathVariable("itemId") Long itemId, @PathVariable("personId") Long personId) {
+        borrowItemImpl.borrowMethod(itemId, personId);
+    }
+    @GetMapping("/unborrow/{itemId}/{personId}")
+    public void unBorrowItem(@PathVariable("itemId") Long itemId, @PathVariable("personId") Long personId) {
+        borrowItemImpl.unBorrowMethod(itemId, personId);
     }
 
     @PostMapping("/createbook")
@@ -62,18 +66,17 @@ public class ItemController {
         Item updateItem = itemService.update(personId, name, email);
         return new ResponseEntity<>(updateItem, HttpStatus.OK);
     }
-
+    @DeleteMapping("/{itemId}")
+    public ResponseEntity<?> deleteItemById(@PathVariable("itemId") Long itemId) {
+        itemService.deleteById(itemId);
+        return new ResponseEntity<>(HttpStatus.OK);}
     @DeleteMapping
     public ResponseEntity<?> deleteAllItems() {
         itemService.deleteAll();
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/{itemId}")
-    public ResponseEntity<?> deleteItemById(@PathVariable("itemId") Long itemId) {
-        itemService.deleteById(itemId);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+
 
 
 }

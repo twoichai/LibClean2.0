@@ -34,7 +34,7 @@ public class ItemServiceImpl implements ItemService {
                 throw new ItemAlreadyExists("Item already exists, can't create new one");
             } else
                 item = itemRepository.save(item);
-            log.info("Saving new item into the data base {item}");
+            log.info("Saving new item into the data base {item} with the id ");
             return item.getId();
         } catch (Exception e){
             log.error("An error occurred while saving the item ", e.getMessage());
@@ -44,7 +44,8 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Item update(Long itemId, String title, String author) {
-        Item item = itemRepository.findById(itemId)
+        Item item = itemRepository
+                .findById(itemId)
                 .orElseThrow(() -> new ItemNotFoundException("Item with id " + itemId + " does not exist"));
         if(title != null &&
         title.length() > 0 &&
@@ -110,7 +111,7 @@ public class ItemServiceImpl implements ItemService {
             log.info("An item with the id " + itemId + " was given");
         return optionalItem.get();
         } else {
-            throw new ItemNotFoundException("Item with id " + itemId + " was not found ;("  );
+            throw new ItemNotFoundException("Item with id " + itemId + " was not found ;(");
         }
         // String.format("text %1$s", object)
     }

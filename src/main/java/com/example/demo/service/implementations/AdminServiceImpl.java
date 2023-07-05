@@ -43,7 +43,7 @@ public class AdminServiceImpl implements PersonService {
 
     @Transactional
     @Override
-    public void update(Long personId, String name, String email) {
+    public Person update(Long personId, String name,String surname, String email) {
         Person person = personRepository.findById(personId)
                 .orElseThrow(() -> new UserNotFoundException("person with id " + personId
                         + " does not exist"));
@@ -53,6 +53,12 @@ public class AdminServiceImpl implements PersonService {
             log.info("user with the id: " + personId + " was updated");
             person.setName(name);
         }
+        if (surname != null &&
+                name.length() > 0 &&
+                !Objects.equals(person.getSurname(), surname)) {
+            log.info("user with the id: " + personId + " was updated");
+            person.setSurname(surname);
+        }
 
         if (email != null &&
                 email.length() > 0 && !Objects.equals(person.getEmail(), email)) {
@@ -61,7 +67,7 @@ public class AdminServiceImpl implements PersonService {
                 log.info("email is taken, can't update user with the id " + personId);
                 throw new IllegalStateException("email taken");
             }
-        }
+        }return person;
     }
     @Override
     public boolean deleteAll() {
@@ -82,9 +88,15 @@ public class AdminServiceImpl implements PersonService {
     }
 
     @Override
-    public Optional<Person> getById(Long personId) {
-        log.info("A person with the id " + personId + " was given");
-        return personRepository.findById(personId);
+    public Person getById(Long personId) throws UserNotFoundException{
+        Optional<Person> optionalPerson = personRepository.findById(personId);
+        if(optionalPerson.isPresent()){
+            log.info("A person with the id " + personId + " was given");
+            return optionalPerson.get();
+        }else {
+            throw new UserNotFoundException("User with id " + personId + " was not found ;(");
+        }
+
     }
 
     @Override

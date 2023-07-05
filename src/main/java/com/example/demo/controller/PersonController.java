@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.controller.dto.PersonDTO;
+import com.example.demo.repository.model.Item;
 import com.example.demo.repository.model.Person;
 import com.example.demo.service.PersonService;
 import com.example.demo.service.implementations.AdminServiceImpl;
@@ -35,8 +36,8 @@ public class PersonController {
 
     @GetMapping("/{personId}")
     @ResponseBody
-    public ResponseEntity<Optional<Person>> getPersonById(@PathVariable Long personId) {
-        Optional<Person> person = personService.getById(personId);
+    public ResponseEntity<Person> getPersonById(@PathVariable Long personId) {
+        Person person = personService.getById(personId);
         return ResponseEntity.ok(person);
     }
 
@@ -46,17 +47,24 @@ public class PersonController {
     }
 
     @PutMapping("/{personId}")
-    public void updatePerson(@PathVariable("personId") Long itemId,
-                             @RequestParam(required = false) String title,
-                             @RequestParam(required = false) String author){
-        personService.update(itemId, title, author);
+    public ResponseEntity<Person> updatePerson(@PathVariable("personId") Long personId,
+                                               @RequestParam(required = false) String name,
+                                             @RequestParam(required = false) String surname,
+
+                                             @RequestParam(required = false) String email){
+        Person updatePerson = personService.update(personId, name, surname, email);
+        return new ResponseEntity<>(updatePerson, HttpStatus.OK);
     }
     // ToDo: ResponseEntity
 
     @DeleteMapping("/{personId}")
-    public void deletePersonById(@PathVariable("personId")Long personId) {
-        personService.deleteById(personId); }
+    public ResponseEntity<?> deletePersonById(@PathVariable("personId")Long personId) {
+        personService.deleteById(personId);
+        return new ResponseEntity<>(HttpStatus.OK);}
     @DeleteMapping
-    public void deleteAllPersons(){ personService.deleteAll(); }
+    public ResponseEntity<?> deleteAllPersons(){
+        personService.deleteAll();
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 }

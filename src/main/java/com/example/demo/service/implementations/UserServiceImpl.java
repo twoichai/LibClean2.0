@@ -6,7 +6,6 @@ import com.example.demo.service.PersonService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements PersonService {
@@ -16,8 +15,9 @@ public class UserServiceImpl implements PersonService {
     }
 
     @Override
-    public void update(Long personID, String name, String email) {
+    public Person update(Long personID, String name, String surname, String email) {
 
+        return null;
     }
 
     @Override
@@ -31,8 +31,8 @@ public class UserServiceImpl implements PersonService {
     }
 
     @Override
-    public Optional<Person> getById(Long personId) {
-        return Optional.empty();
+    public Person getById(Long personId) {
+        return null;
     }
 
     @Override

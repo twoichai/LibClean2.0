@@ -2,6 +2,7 @@ package com.example.demo.service.implementations;
 
 import com.example.demo.repository.exceptions.ItemNotAvailableException;
 import com.example.demo.repository.exceptions.ItemNotFoundException;
+import com.example.demo.repository.exceptions.UnsuccessfulOperation;
 import com.example.demo.repository.model.Item;
 import com.example.demo.repository.model.Person;
 import com.example.demo.service.ItemService;
@@ -10,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 /**
@@ -35,23 +37,36 @@ public class BorrowItemImpl {
      * @param personId of the person which borrows
      *                 connects
      */
-    public void borrowMethod(long itemId, long personId) throws ItemNotAvailableException {
-        Optional<Person> person = personService.getById(personId);
+    public void borrowMethod(long itemId, long personId) throws ItemNotFoundException {
+        Person person;
         Item item;
         try {
+            person = personService.getById(personId);
             item = itemService.getById(itemId);
-            Person personLoaded = person.get();
-            item.setPerson(personLoaded);
+            item.setPerson(person);
             item.setIsAvailable(false);
+            item.setDateOfBorrowing(LocalDate.now());
             itemService.updateIntern(item);
             log.info("Item was borrowed");
 
         }catch (ItemNotFoundException ex){
             log.info("Item with id {} not found", itemId);
-            return ;
+            return;
         }
-
-
+    }
+    public void unBorrowMethod(long itemId, long personId) throws UnsuccessfulOperation {
+        Item item;
+        try {
+            item = itemService.getById(itemId);
+            item.setIsAvailable(true);
+            item.setDateOfBorrowing(null);
+            item.setPerson(null);
+            itemService.updateIntern(item);
+            log.info("item with the id: " + itemId + " was successfully given back. By user with id: " + personId);
+        }catch (UnsuccessfulOperation ex){
+            log.info("Item could not be given back");
+            return;
+        }
 
     }
 }
