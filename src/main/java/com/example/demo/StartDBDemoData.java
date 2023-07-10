@@ -57,7 +57,7 @@ public class StartDBDemoData {
                 .typeOfItem(TypeOfItem.MOVIE)
                 .dateOfBorrowing(null) //not needed
                 .isAvailable(true)
-                .imageUrl("pulp_fiction")
+                .imageUrl("pulp_fiction.jpg")
                 .build();
 
         ItemDTO item2 = ItemDTO.builder()

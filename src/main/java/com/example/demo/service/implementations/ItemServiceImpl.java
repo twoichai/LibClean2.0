@@ -1,6 +1,7 @@
 package com.example.demo.service.implementations;
 
 import com.example.demo.controller.dto.ItemDTO;
+import com.example.demo.controller.dto.PersonDTO;
 import com.example.demo.mapper.ItemMapper;
 import com.example.demo.repository.ItemRepository;
 import com.example.demo.repository.exceptions.ItemAlreadyExists;
@@ -117,9 +118,20 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<Item> getAll() {
+    public List<ItemDTO> getAll() throws ItemNotFoundException{
+        List<Item> itemList = itemRepository.findAll();
+        List<ItemDTO> itemDTOList = new ArrayList<>();
 
-        return itemRepository.findAll();
+        if(itemList.size()>0){
+            for (Item item : itemList){
+                ItemDTO temp = itemMapper.itemToItemDTO(item);
+                itemDTOList.add(temp);
+            }
+            log.info("Returning the list :)");
+            return itemDTOList;
+        }else {
+            log.info("List is empty");
+            throw new ItemNotFoundException("Items not found");
+        }
     }
-
 }

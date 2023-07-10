@@ -100,15 +100,22 @@ public class AdminServiceImpl implements PersonService {
     }
 
     @Override
-    public List<PersonDTO> getAll() {
+    public List<PersonDTO> getAll() throws UserNotFoundException{
         List<Person> personList = personRepository.findAll();
         List<PersonDTO> personDTOList = new ArrayList<>();
-        for (Person person : personList) {
-            PersonDTO temp = personMapper.personToPersonDTO(person);
-            personDTOList.add(temp);
+
+        if (personList.size()>0){
+            for (Person person : personList) {
+                PersonDTO temp = personMapper.personToPersonDTO(person);
+                personDTOList.add(temp);
+            }
+            //System.out.println(personDTOList);
+            log.info("List of persons was printed");
+            return personDTOList;
+        }else {
+            throw new UserNotFoundException("user are not found");
         }
-        log.info("List of persons was printed");
-        return personDTOList;
+
 
     }
 }

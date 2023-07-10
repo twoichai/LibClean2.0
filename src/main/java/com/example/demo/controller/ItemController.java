@@ -21,15 +21,15 @@ import java.util.Optional;
 public class ItemController {
     private final ItemService itemService;
     private final BorrowItemImpl borrowItemImpl;
-
     public ItemController(@Qualifier("item") ItemService itemService, BorrowItemImpl borrowItemImpl) {
         this.itemService = itemService;
         this.borrowItemImpl = borrowItemImpl;
     }
 
-    @GetMapping
-    public ResponseEntity<List<Item>> getItemList() {
-        List<Item> itemList = itemService.getAll();
+    // finding and giving of items with and without a parameter
+    @GetMapping("/getall")
+    public ResponseEntity<List<ItemDTO>> getItemList() {
+        List<ItemDTO> itemList = itemService.getAll();
         return new ResponseEntity<>(itemList, HttpStatus.OK);
     }
 
@@ -45,15 +45,7 @@ public class ItemController {
         Optional<List<ItemDTO>> itemList = itemService.getItemsByAuthor(author);
     }
 
-    @GetMapping("/borrow/{itemId}/{personId}")
-    public void borrowItem(@PathVariable("itemId") Long itemId, @PathVariable("personId") Long personId) {
-        borrowItemImpl.borrowMethod(itemId, personId);
-    }
-    @GetMapping("/unborrow/{itemId}/{personId}")
-    public void unBorrowItem(@PathVariable("itemId") Long itemId, @PathVariable("personId") Long personId) {
-        borrowItemImpl.unBorrowMethod(itemId, personId);
-    }
-
+    // creating and updating of items
     @PostMapping("/createbook")
     public ResponseEntity<Long> saveItem(@RequestBody ItemDTO itemDTO) {
         return new ResponseEntity<>(itemService.save(itemDTO), HttpStatus.CREATED);
@@ -66,17 +58,25 @@ public class ItemController {
         Item updateItem = itemService.update(personId, name, email);
         return new ResponseEntity<>(updateItem, HttpStatus.OK);
     }
+    // Removal of items
     @DeleteMapping("/{itemId}")
     public ResponseEntity<?> deleteItemById(@PathVariable("itemId") Long itemId) {
         itemService.deleteById(itemId);
-        return new ResponseEntity<>(HttpStatus.OK);}
-    @DeleteMapping
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/deleteall")
     public ResponseEntity<?> deleteAllItems() {
         itemService.deleteAll();
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-
-
-
+    // User - item mappings
+    @GetMapping("/borrow/{itemId}/{personId}")
+    public void borrowItem(@PathVariable("itemId") Long itemId, @PathVariable("personId") Long personId) {
+        borrowItemImpl.borrowMethod(itemId, personId);
+    }
+    @GetMapping("/unborrow/{itemId}/{personId}")
+    public void unBorrowItem(@PathVariable("itemId") Long itemId, @PathVariable("personId") Long personId) {
+        borrowItemImpl.unBorrowMethod(itemId, personId);
+    }
 }

@@ -19,5 +19,5 @@ public interface ItemService {
     Optional<List<ItemDTO>> getItemsByAuthor(String author);
     Optional<Optional<Item>> getItemsByTitle(String title);
     Item getById(Long itemId) throws ItemNotFoundException;
-    List<Item> getAll();
+    List<ItemDTO> getAll();
 }
