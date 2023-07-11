@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.controller.dto.PersonDTO;
+import com.example.demo.controller.dto.RestResponse;
 import com.example.demo.repository.model.Item;
 import com.example.demo.repository.model.Person;
 import com.example.demo.service.PersonService;
@@ -34,19 +35,21 @@ public class PersonController {
     public List<PersonDTO> getPersonList() {
         return personService.getAll(); }
 
-    @GetMapping("/{personId}")
+    @GetMapping("/getById/{personId}")
     @ResponseBody
     public ResponseEntity<Person> getPersonById(@PathVariable Long personId) {
         Person person = personService.getById(personId);
         return ResponseEntity.ok(person);
     }
 
-    @PostMapping
-    public ResponseEntity<Long> createUser(@RequestBody PersonDTO personDTO) {
-        return new ResponseEntity<>(personService.save(personDTO), HttpStatus.CREATED);
+    @PostMapping("/create")
+    @ResponseStatus(HttpStatus.CREATED)
+    public RestResponse createPerson(@RequestBody PersonDTO personDTO) {
+        Long savedId = personService.save(personDTO);
+        return new RestResponse(String.valueOf(savedId));
     }
 
-    @PutMapping("/{personId}")
+    @PutMapping("/update/{personId}")
     public ResponseEntity<Person> updatePerson(@PathVariable("personId") Long personId,
                                                @RequestParam(required = false) String name,
                                              @RequestParam(required = false) String surname,
@@ -57,7 +60,7 @@ public class PersonController {
     }
     // ToDo: ResponseEntity
 
-    @DeleteMapping("/{personId}")
+    @DeleteMapping("/delete/{personId}")
     public ResponseEntity<?> deletePersonById(@PathVariable("personId")Long personId) {
         personService.deleteById(personId);
         return new ResponseEntity<>(HttpStatus.OK);}

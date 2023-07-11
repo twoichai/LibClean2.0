@@ -23,8 +23,4 @@ public class PersonDTO {
     private String email;
     private Integer age;
     private PersonRole personRole;
-
-
-
-
 }

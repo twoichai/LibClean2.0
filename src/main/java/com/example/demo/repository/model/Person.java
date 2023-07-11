@@ -16,6 +16,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @Entity
+@Getter
 @Table(name = "users")
 public class Person {
 

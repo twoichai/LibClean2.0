@@ -96,7 +96,6 @@ public class AdminServiceImpl implements PersonService {
         }else {
             throw new UserNotFoundException("User with id " + personId + " was not found ;(");
         }
-
     }
 
     @Override
